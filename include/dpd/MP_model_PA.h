@@ -54,7 +54,7 @@ class DPD_API MP_model_PA : virtual public gr::sync_block
 {
 public:
     // gr::dpd::MP_model_PA
-    typedef boost::shared_ptr<MP_model_PA> sptr;
+    typedef std::shared_ptr<MP_model_PA> sptr;
 
     /*!
      * \brief Make a MP_model_PA block

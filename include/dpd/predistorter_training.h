@@ -43,7 +43,7 @@ namespace dpd {
 class DPD_API predistorter_training : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<predistorter_training> sptr;
+    typedef std::shared_ptr<predistorter_training> sptr;
 
     /*!
      * \brief Make a predistorter_training block

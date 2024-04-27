@@ -29,7 +29,7 @@ namespace dpd {
 class DPD_API stream_to_gmp_vector : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<stream_to_gmp_vector> sptr;
+    typedef std::shared_ptr<stream_to_gmp_vector> sptr;
 
     /*!
      * \brief Make stream_to_gmp_vector block

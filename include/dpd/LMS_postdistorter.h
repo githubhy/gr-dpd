@@ -48,7 +48,7 @@ namespace dpd {
 class DPD_API LMS_postdistorter : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<LMS_postdistorter> sptr;
+    typedef std::shared_ptr<LMS_postdistorter> sptr;
 
     /*!
      * \brief Make LMS_postdistorter

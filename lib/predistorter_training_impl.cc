@@ -68,7 +68,7 @@ predistorter_training_impl::predistorter_training_impl(
     // setup input message port
     message_port_register_in(pmt::mp("taps"));
     set_msg_handler(pmt::mp("taps"),
-                    boost::bind(&predistorter_training_impl::get_taps, this, _1));
+                    std::bind(&predistorter_training_impl::get_taps, this, std::placeholders::_1));
 }
 
 /*
