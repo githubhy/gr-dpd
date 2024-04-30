@@ -1,13 +1,9 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Alekh Gupta
+ * Copyright 2024 gr-dpd author.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "predistorter_training_impl.h"
 #include <gnuradio/io_signature.h>
@@ -23,13 +19,14 @@ using namespace arma;
 namespace gr {
 namespace dpd {
 
+using input_type = gr_complex;
+using output_type = gr_complex;
 predistorter_training::sptr
 predistorter_training::make(const std::vector<int>& dpd_params,
                             std::string mode,
                             const std::vector<gr_complex>& taps)
 {
-    return gnuradio::get_initial_sptr(
-        new predistorter_training_impl(dpd_params, mode, taps));
+    return gnuradio::make_block_sptr<predistorter_training_impl>(dpd_params, mode, taps);
 }
 
 
@@ -41,8 +38,10 @@ predistorter_training_impl::predistorter_training_impl(
     std::string mode,
     const std::vector<gr_complex>& taps)
     : gr::sync_block("predistorter_training",
-                     gr::io_signature::make(1, 1, sizeof(gr_complex)),
-                     gr::io_signature::make(1, 2, sizeof(gr_complex))),
+                     gr::io_signature::make(
+                         1 /* min inputs */, 1 /* max inputs */, sizeof(input_type)),
+                     gr::io_signature::make(
+                         1 /* min outputs */, 2 /*max outputs */, sizeof(output_type))),
       K_a(dpd_params[0]),
       L_a(dpd_params[1]),
       K_b(dpd_params[2]),
@@ -154,8 +153,9 @@ int predistorter_training_impl::work(int noutput_items,
                                      gr_vector_const_void_star& input_items,
                                      gr_vector_void_star& output_items)
 {
-    gr_complex* out = (gr_complex*)output_items[0];
-    gr_complex* flag = (gr_complex*)output_items[1];
+    // auto in = static_cast<const input_type*>(input_items[0]);
+    auto out = static_cast<output_type*>(output_items[0]);
+    auto flag = static_cast<output_type*>(output_items[1]);
 
     predistorter_training_colvec = d_predistorter_training_colvec;
     

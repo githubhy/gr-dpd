@@ -1,13 +1,9 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Alekh Gupta
+ * Copyright 2024 gr-dpd author.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "RLS_postdistorter_impl.h"
 #include <gnuradio/io_signature.h>
@@ -24,10 +20,12 @@ using namespace arma;
 namespace gr {
 namespace dpd {
 
+using input_type = gr_complex;
+using output_type = gr_complex;
 RLS_postdistorter::sptr RLS_postdistorter::make(const std::vector<int>& dpd_params,
                                                 int iter_limit)
 {
-    return gnuradio::get_initial_sptr(new RLS_postdistorter_impl(dpd_params, iter_limit));
+    return gnuradio::make_block_sptr<RLS_postdistorter_impl>(dpd_params, iter_limit);
 }
 
 
@@ -37,8 +35,10 @@ RLS_postdistorter::sptr RLS_postdistorter::make(const std::vector<int>& dpd_para
 RLS_postdistorter_impl::RLS_postdistorter_impl(const std::vector<int>& dpd_params,
                                                int iter_limit)
     : gr::sync_block("RLS_postdistorter",
-                     gr::io_signature::make(3, 3, sizeof(gr_complex)),
-                     gr::io_signature::make(0, 0, 0)),
+                     gr::io_signature::make(
+                         3 /* min inputs */, 3 /* max inputs */, sizeof(input_type)),
+                     gr::io_signature::make(
+                         0 /* min outputs */, 0 /*max outputs */, 0)), //sizeof(output_type)))
       d_dpd_params(dpd_params),
       K_a(d_dpd_params[0]),
       L_a(d_dpd_params[1]),
@@ -417,9 +417,10 @@ int RLS_postdistorter_impl::work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
                                  gr_vector_void_star& output_items)
 {
-    const gr_complex* in1 = (const gr_complex*)input_items[0]; // PA_output (gain phase calibrated)
-    const gr_complex* in2 = (const gr_complex*)input_items[1]; // PA input or Predistorter output
-    const gr_complex* flag = (const gr_complex*)input_items[2];    
+    auto in1 = static_cast<const input_type*>(input_items[0]); // PA_output (gain phase calibrated)
+    auto in2 = static_cast<const input_type*>(input_items[1]); // PA input or Predistorter output
+    auto flag = static_cast<const input_type*>(input_items[2]);
+    // auto out = static_cast<output_type*>(output_items[0]);
 
     // Do <+signal processing+>
     // copy private variables accessed by the asynchronous message handler block

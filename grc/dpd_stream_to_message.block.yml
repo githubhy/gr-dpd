@@ -1,8 +1,9 @@
 id: dpd_stream_to_message
-label: Stream to Message
-category: '[DPD]'
+label: stream_to_message
+category: '[dpd]'
+
 templates:
-  imports: import dpd
+  imports: from gnuradio import dpd
   make: dpd.stream_to_message()
 inputs:
 - label: in

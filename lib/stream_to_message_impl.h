@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Alekh Gupta
+ * Copyright 2024 gr-dpd author.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -8,7 +8,7 @@
 #ifndef INCLUDED_DPD_STREAM_TO_MESSAGE_IMPL_H
 #define INCLUDED_DPD_STREAM_TO_MESSAGE_IMPL_H
 
-#include <dpd/stream_to_message.h>
+#include <gnuradio/dpd/stream_to_message.h>
 
 namespace gr {
 namespace dpd {

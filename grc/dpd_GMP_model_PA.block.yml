@@ -1,10 +1,17 @@
 id: dpd_GMP_model_PA
-label: GMP model PA
-category: '[DPD]'
+label: GMP_model_PA
+category: '[dpd]'
+
 templates:
-  imports: import dpd
-  make: dpd.GMP_model_PA(${model_param1}, ${model_param2}, ${model_param3}, ${model_param4},
-    ${model_param5}, ${mode}, ${coeff1}, ${coeff2})
+  imports: from gnuradio import dpd
+  make: dpd.GMP_model_PA(${model_param1}, ${model_param2}, ${model_param3}, ${model_param4}, ${model_param5}, ${mode}, ${coeff1}, ${coeff2})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#     * default
 parameters:
 - id: model_param1
   label: Model_param1 (K_a)

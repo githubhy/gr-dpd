@@ -1,6 +1,7 @@
 options:
   parameters:
     author: alekh
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -51,7 +52,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/alekh/gr-dpd/examples/Data_Files/Input.bin
+    file: /home/fl/gr-dpd/examples/Data_Files/Input.bin
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -154,7 +155,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     mode: training
-    tap: (1)
+    taps: (1)
   states:
     bus_sink: false
     bus_source: false
@@ -181,7 +182,7 @@ blocks:
     average: '0.05'
     axislabels: 'True'
     bw: samp_rate
-    color1: '"green"'
+    color1: '"blue"'
     color10: '"dark blue"'
     color2: '"red"'
     color3: '"blue"'
@@ -192,7 +193,7 @@ blocks:
     color8: '"dark red"'
     color9: '"dark green"'
     comment: ''
-    ctrlpanel: 'False'
+    ctrlpanel: 'True'
     fc: '0'
     fftsize: '4096'
     freqhalf: 'True'
@@ -214,6 +215,7 @@ blocks:
     minoutbuf: '0'
     name: '"PA_with_DPD"'
     nconnections: '4'
+    norm_window: 'False'
     showports: 'False'
     tr_chan: '0'
     tr_level: '0.0'
@@ -232,7 +234,7 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
     ymax: '10'
     ymin: '-140'
   states:
@@ -261,3 +263,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

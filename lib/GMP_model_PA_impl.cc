@@ -1,13 +1,9 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Alekh Gupta
+ * Copyright 2024 gr-dpd author.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "GMP_model_PA_impl.h"
 #include <gnuradio/io_signature.h>
@@ -55,6 +51,8 @@ using namespace arma;
 namespace gr {
 namespace dpd {
 
+using input_type = gr_complex;
+using output_type = gr_complex;
 GMP_model_PA::sptr GMP_model_PA::make(int model_param1,
                                       int model_param2,
                                       int model_param3,
@@ -64,14 +62,14 @@ GMP_model_PA::sptr GMP_model_PA::make(int model_param1,
                                       const std::vector<gr_complex>& coeff1,
                                       const std::vector<gr_complex>& coeff2)
 {
-    return gnuradio::get_initial_sptr(new GMP_model_PA_impl(model_param1,
-                                                            model_param2,
-                                                            model_param3,
-                                                            model_param4,
-                                                            model_param5,
-                                                            mode,
-                                                            coeff1,
-                                                            coeff2));
+    return gnuradio::make_block_sptr<GMP_model_PA_impl>(model_param1,
+                                                        model_param2,
+                                                        model_param3,
+                                                        model_param4,
+                                                        model_param5,
+                                                        mode,
+                                                        coeff1,
+                                                        coeff2);
 }
 
 
@@ -87,8 +85,10 @@ GMP_model_PA_impl::GMP_model_PA_impl(int model_param1,
                                      const std::vector<gr_complex>& coeff1,
                                      const std::vector<gr_complex>& coeff2)
     : gr::sync_block("GMP_model_PA",
-                     gr::io_signature::make(1, 1, sizeof(gr_complex)),
-                     gr::io_signature::make(1, 1, sizeof(gr_complex))),
+                     gr::io_signature::make(
+                         1 /* min inputs */, 1 /* max inputs */, sizeof(input_type)),
+                     gr::io_signature::make(
+                         1 /* min outputs */, 1 /*max outputs */, sizeof(output_type))),
       K_a(model_param1),
       L_a(model_param2),
       K_b(model_param3),
@@ -201,8 +201,8 @@ int GMP_model_PA_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto in = static_cast<const input_type*>(input_items[0]);
+    auto out = static_cast<output_type*>(output_items[0]);
 
     // Do <+signal processing+>
     for (int item = history() - 1; item < noutput_items + history() - 1; item++) {

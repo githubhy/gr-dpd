@@ -1,9 +1,17 @@
 id: dpd_MP_model_PA
-label: MP model PA
-category: '[DPD]'
+label: MP_model_PA
+category: '[dpd]'
+
 templates:
-  imports: import dpd
+  imports: from gnuradio import dpd
   make: dpd.MP_model_PA(${Order}, ${Mem_Depth}, ${Mode}, ${Coeff})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#     * default
 parameters:
 - id: Order
   label: Order

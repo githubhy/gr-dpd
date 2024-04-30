@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Alekh Gupta
+ * Copyright 2024 gr-dpd author.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -8,7 +8,7 @@
 #ifndef INCLUDED_DPD_MP_MODEL_PA_IMPL_H
 #define INCLUDED_DPD_MP_MODEL_PA_IMPL_H
 
-#include <dpd/MP_model_PA.h>
+#include <gnuradio/dpd/MP_model_PA.h>
 #include <math.h>
 #include <algorithm>
 #include <armadillo>
@@ -35,7 +35,7 @@ public:
                      const std::vector<gr_complex>& Coeff);
     ~MP_model_PA_impl();
 
-    // Where all the action or processing really happens
+    // Where all the action really happens
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items);

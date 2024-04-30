@@ -1,8 +1,9 @@
 id: dpd_gain_phase_calibrate
-label: Gain Phase Calibrate
-category: '[DPD]'
+label: gain_phase_calibrate
+category: '[dpd]'
+
 templates:
-  imports: import dpd
+  imports: from gnuradio import dpd
   make: dpd.gain_phase_calibrate()
 inputs:
 - label: PA Output

@@ -33,7 +33,7 @@ The blocks added to the module, so far, are:
 
 gr-dpd requires:
 
-`GNU Radio` version = 3.8   ([GR 3.8 installation guide](https://wiki.gnuradio.org/index.php/InstallingGR#For_GNU_Radio_3.8_or_Earlier))
+`GNU Radio` version = 3.10   ([Could use CondaInstall](https://wiki.gnuradio.org/index.php?title=CondaInstall#Installation_using_conda))
 
 `Armadillo` version >= 6.7
 
@@ -47,7 +47,7 @@ First, you need to install the dependencies (above).
 
 Then, you need to download this repository
 ```bash
-$ git clone https://github.com/gnuradio/gr-dpd.git
+$ git clone https://github.com/githubhy/gr-dpd.git
 ```
 
 After this, gr-dpd should be installed as any other GNU Radio out-of-tree module.
@@ -62,6 +62,8 @@ $ sudo ldconfig
 ```
 If your GNU Radio is installed in other directory (rather than /usr/local), then replace the cmake line 
 `cmake ..` above with: `cmake -DCMAKE_INSTALL_PREFIX=<directory of GNU Radio> ..`
+
+If your GNU Radio is installed via CondaInstall, build and install it with `cmake ..` in [ConstaInstall Guide](https://wiki.gnuradio.org/index.php?title=CondaInstall#Step_2:_Create_an_environment_for_GNU_Radio)
 
 ## Working with the module:
 

@@ -1,13 +1,9 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Alekh Gupta
+ * Copyright 2024 gr-dpd author.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "MP_model_PA_impl.h"
 #include <gnuradio/io_signature.h>
@@ -49,13 +45,14 @@ using namespace arma;
 namespace gr {
 namespace dpd {
 
+using input_type = gr_complex;
+using output_type = gr_complex;
 MP_model_PA::sptr MP_model_PA::make(int Order,
                                     int Mem_Depth,
                                     std::string Mode,
                                     const std::vector<gr_complex>& Coeff)
 {
-    return gnuradio::get_initial_sptr(
-        new MP_model_PA_impl(Order, Mem_Depth, Mode, Coeff));
+    return gnuradio::make_block_sptr<MP_model_PA_impl>(Order, Mem_Depth, Mode, Coeff);
 }
 
 
@@ -67,8 +64,10 @@ MP_model_PA_impl::MP_model_PA_impl(int Order,
                                    std::string Mode,
                                    const std::vector<gr_complex>& Coeff)
     : gr::sync_block("MP_model_PA",
-                     gr::io_signature::make(1, 1, sizeof(gr_complex)),
-                     gr::io_signature::make(1, 1, sizeof(gr_complex))),
+                     gr::io_signature::make(
+                         1 /* min inputs */, 1 /* max inputs */, sizeof(input_type)),
+                     gr::io_signature::make(
+                         1 /* min outputs */, 1 /*max outputs */, sizeof(output_type))),
       K_a(Order),     // Max. Order limited to 7
       L_a(Mem_Depth), // Max no. of taps or memory depth limited to 4
       Mode_val(Mode)  // Mode of operation, i.e., Even, Odd or Both
@@ -128,8 +127,8 @@ int MP_model_PA_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto in = static_cast<const input_type*>(input_items[0]);
+    auto out = static_cast<output_type*>(output_items[0]);
 
     // Do <+signal processing+>
     for (int item = history() - 1; item < noutput_items + history() - 1; item++) {
@@ -155,6 +154,6 @@ int MP_model_PA_impl::work(int noutput_items,
     // Tell runtime system how many output items we produced.
     return noutput_items;
 }
-} // namespace dpd
-} // namespace gr
-  /* namespace gr */
+
+} /* namespace dpd */
+} /* namespace gr */

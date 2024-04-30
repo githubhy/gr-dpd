@@ -1,9 +1,17 @@
 id: dpd_stream_to_gmp_vector
-label: Stream to GMP vector
-category: '[DPD]'
+label: stream_to_gmp_vector
+category: '[dpd]'
+
 templates:
-  imports: import dpd
+  imports: from gnuradio import dpd
   make: dpd.stream_to_gmp_vector(${dpd_params})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#     * default
 parameters:
 - id: dpd_params
   label: Dpd_params

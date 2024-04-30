@@ -1,6 +1,17 @@
 id: dpd_predistorter_training
-label: Predistorter training block
-category: '[DPD]'
+label: predistorter_training
+category: '[dpd]'
+
+templates:
+  imports: from gnuradio import dpd
+  make: dpd.predistorter_training(${dpd_params}, ${mode}, ${taps})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#     * default
 parameters:
 - id: dpd_params
   label: Dpd_params
@@ -11,7 +22,7 @@ parameters:
   default: "training"
   options: ["training", "static"]
   option_labels: [Training, Static]
-- id: tap
+- id: taps
   label: Predistorter Taps
   dtype: complex_vector 
   default: (1) 
@@ -32,7 +43,5 @@ outputs:
   domain: stream
   dtype: complex
   optional: true
-templates:
-  imports: import dpd
-  make: dpd.predistorter_training(${dpd_params}, ${mode}, ${tap})
+
 file_format: 1

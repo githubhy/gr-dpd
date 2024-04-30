@@ -10,47 +10,55 @@
 # Setup library
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
+
 list(APPEND dpd_sources
-    MP_model_PA_impl.cc
+    gain_phase_calibrate_impl.cc
     GMP_model_PA_impl.cc
+    LMS_postdistorter_impl.cc
+    MP_model_PA_impl.cc
     predistorter_training_impl.cc
     RLS_postdistorter_impl.cc
     stream_to_gmp_vector_impl.cc
-    gain_phase_calibrate_impl.cc
-    stream_to_message_impl.cc
-    LMS_postdistorter_impl.cc )
+    stream_to_message_impl.cc)
 
-set(dpd_sources "${dpd_sources}" PARENT_SCOPE)
+set(dpd_sources
+    "${dpd_sources}"
+    PARENT_SCOPE)
 if(NOT dpd_sources)
-    MESSAGE(STATUS "No C++ sources... skipping lib/")
+    message(STATUS "No C++ sources... skipping lib/")
     return()
 endif(NOT dpd_sources)
 
+find_package(Armadillo REQUIRED)
+
 if (ARMADILLO_FOUND)
-    LIST(APPEND dpd_sources)
+    MESSAGE("Found Armadillo.")
+    MESSAGE("Armadillo include dir is: ${ARMADILLO_INCLUDE_DIRS}")
+    MESSAGE("Armadillo lib's to be linked against: ${ARMADILLO_LIBRARIES}")
+    MESSAGE("Armadillo lib version: ${ARMADILLO_VERSION_STRING}")
 else ()
-    set(ARMADILLO_LIBRARIES)
+    message(ERROR "Armadillo not found, stop building.")
+    return ()
 endif ()
 
 add_library(gnuradio-dpd SHARED ${dpd_sources})
-target_link_libraries(gnuradio-dpd gnuradio::gnuradio-runtime gnuradio::gnuradio-blocks ${ARMADILLO_LIBRARIES})
-target_include_directories(gnuradio-dpd
+target_link_libraries(gnuradio-dpd gnuradio::gnuradio-runtime ${ARMADILLO_LIBRARIES})
+target_include_directories(
+    gnuradio-dpd
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-    PUBLIC $<INSTALL_INTERFACE:include>
-  )
+    PUBLIC $<INSTALL_INTERFACE:include>)
 set_target_properties(gnuradio-dpd PROPERTIES DEFINE_SYMBOL "gnuradio_dpd_EXPORTS")
 
 if(APPLE)
-    set_target_properties(gnuradio-dpd PROPERTIES
-        INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
-    )
+    set_target_properties(gnuradio-dpd PROPERTIES INSTALL_NAME_DIR
+                                                    "${CMAKE_INSTALL_PREFIX}/lib")
 endif(APPLE)
 
 ########################################################################
 # Install built library files
 ########################################################################
 include(GrMiscUtils)
-GR_LIBRARY_FOO(gnuradio-dpd)
+gr_library_foo(gnuradio-dpd)
 
 ########################################################################
 # Print summary
@@ -66,18 +74,15 @@ include(GrTest)
 # If your unit tests require special include paths, add them here
 #include_directories()
 # List all files that contain Boost.UTF unit tests here
-list(APPEND test_dpd_sources
-)
+list(APPEND test_dpd_sources)
 # Anything we need to link to for the unit tests go here
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-dpd)
 
 if(NOT test_dpd_sources)
-    MESSAGE(STATUS "No C++ unit tests... skipping")
+    message(STATUS "No C++ unit tests... skipping")
     return()
 endif(NOT test_dpd_sources)
 
 foreach(qa_file ${test_dpd_sources})
-    GR_ADD_CPP_TEST("dpd_${qa_file}"
-        ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
-    )
+    gr_add_cpp_test("dpd_${qa_file}" ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file})
 endforeach(qa_file)

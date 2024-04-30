@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Alekh Gupta
+ * Copyright 2024 gr-dpd author.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -8,7 +8,7 @@
 #ifndef INCLUDED_DPD_GMP_MODEL_PA_IMPL_H
 #define INCLUDED_DPD_GMP_MODEL_PA_IMPL_H
 
-#include <dpd/GMP_model_PA.h>
+#include <gnuradio/dpd/GMP_model_PA.h>
 #include <math.h>
 #include <algorithm>
 #include <armadillo>

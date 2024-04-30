@@ -1,13 +1,9 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Alekh Gupta
+ * Copyright 2024 gr-dpd author.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "stream_to_message_impl.h"
 #include <gnuradio/io_signature.h>
@@ -15,9 +11,11 @@
 namespace gr {
 namespace dpd {
 
+using input_type = gr_complex;
+using output_type = gr_complex;
 stream_to_message::sptr stream_to_message::make()
 {
-    return gnuradio::get_initial_sptr(new stream_to_message_impl());
+    return gnuradio::make_block_sptr<stream_to_message_impl>();
 }
 
 
@@ -26,8 +24,10 @@ stream_to_message::sptr stream_to_message::make()
  */
 stream_to_message_impl::stream_to_message_impl()
     : gr::sync_block("stream_to_message",
-                     gr::io_signature::make(1, 1, sizeof(gr_complex)),
-                     gr::io_signature::make(0, 0, 0))
+                     gr::io_signature::make(
+                         1 /* min inputs */, 1 /* max inputs */, sizeof(input_type)),
+                     gr::io_signature::make(
+                         0 /* min outputs */, 0 /*max outputs */, 0))//sizeof(output_type)))
 {
     message_port_register_out(pmt::mp("samples"));
 }
@@ -41,7 +41,8 @@ int stream_to_message_impl::work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
                                  gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
+    auto in = static_cast<const input_type*>(input_items[0]);
+    // auto out = static_cast<output_type*>(output_items[0]);
 
     // Do <+signal processing+>
 

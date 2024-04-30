@@ -1,27 +1,10 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 gr-dpd author.
+ * Copyright 2024 gr-dpd author.
  *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-#define ARMA_DONT_PRINT_ERRORS
 #include "LMS_postdistorter_impl.h"
 #include <gnuradio/io_signature.h>
 #include <armadillo>
@@ -36,13 +19,15 @@ using namespace arma;
 namespace gr {
 namespace dpd {
 
+using input_type = gr_complex;
+using output_type = gr_complex;
 LMS_postdistorter::sptr LMS_postdistorter::make(const std::vector<int>& dpd_params,
                                                 int iter_limit,
                                                 std::string method,
                                                 gr_complexd learning_rate)
 {
-    return gnuradio::get_initial_sptr(
-        new LMS_postdistorter_impl(dpd_params, iter_limit, method, learning_rate));
+    return gnuradio::make_block_sptr<LMS_postdistorter_impl>(
+        dpd_params, iter_limit, method, learning_rate);
 }
 
 
@@ -54,8 +39,10 @@ LMS_postdistorter_impl::LMS_postdistorter_impl(const std::vector<int>& dpd_param
                                                std::string method,
                                                gr_complexd learning_rate)
     : gr::sync_block("LMS_postdistorter",
-                     gr::io_signature::make(3, 3, sizeof(gr_complex)),
-                     gr::io_signature::make(0, 0, 0)),
+                     gr::io_signature::make(
+                         3 /* min inputs */, 3 /* max inputs */, sizeof(input_type)),
+                     gr::io_signature::make(
+                         0 /* min outputs */, 0 /*max outputs */, 0)),//sizeof(output_type)))
       d_dpd_params(dpd_params),
       K_a(d_dpd_params[0]),
       L_a(d_dpd_params[1]),
@@ -170,9 +157,9 @@ int LMS_postdistorter_impl::work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
                                  gr_vector_void_star& output_items)
 {
-    const gr_complex* in1 = (const gr_complex*)input_items[0]; // PA_output (gain phase calibrated)
-    const gr_complex* in2 = (const gr_complex*)input_items[1]; // PA input or Predistorter output
-    const gr_complex* flag = (const gr_complex*)input_items[2];
+    auto in1 = static_cast<const input_type*>(input_items[0]); // PA_output (gain phase calibrated)
+    auto in2 = static_cast<const input_type*>(input_items[1]); // PA input or Predistorter output
+    auto flag = static_cast<const input_type*>(input_items[2]);
 
     // Do <+signal processing+>
     for (int item = 0; item < noutput_items; item++) {
@@ -227,5 +214,6 @@ int LMS_postdistorter_impl::work(int noutput_items,
     // Tell runtime system how many output items we produced.
     return noutput_items;
 }
+
 } /* namespace dpd */
 } /* namespace gr */

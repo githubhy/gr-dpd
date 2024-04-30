@@ -1,9 +1,17 @@
 id: dpd_RLS_postdistorter
-label: RLS postdistorter
-category: '[DPD]'
+label: RLS_postdistorter
+category: '[dpd]'
+
 templates:
-  imports: import dpd
+  imports: from gnuradio import dpd
   make: dpd.RLS_postdistorter(${dpd_params}, ${iter_limit})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#     * default
 parameters:
 - id: dpd_params
   label: Dpd_Params
