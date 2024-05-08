@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(GMP_model_PA.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(4af16dbef5d624887a5a6088ad98821a)                     */
+/* BINDTOOL_HEADER_FILE_HASH(fdfe5a9ae5e44f7bb3ecff10b9ff26a8)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -30,11 +30,14 @@ namespace py = pybind11;
 void bind_GMP_model_PA(py::module& m)
 {
 
-    using GMP_model_PA = gr::dpd::GMP_model_PA;
+    using GMP_model_PA = ::gr::dpd::GMP_model_PA;
 
 
-    py::class_<GMP_model_PA, gr::block, gr::basic_block, std::shared_ptr<GMP_model_PA>>(
-        m, "GMP_model_PA", D(GMP_model_PA))
+    py::class_<GMP_model_PA,
+               gr::sync_block,
+               gr::block,
+               gr::basic_block,
+               std::shared_ptr<GMP_model_PA>>(m, "GMP_model_PA", D(GMP_model_PA))
 
         .def(py::init(&GMP_model_PA::make),
              py::arg("model_param1"),
@@ -47,6 +50,26 @@ void bind_GMP_model_PA(py::module& m)
              py::arg("coeff2"),
              D(GMP_model_PA, make))
 
+
+        .def("set_K_a", &GMP_model_PA::set_K_a, py::arg("v"), D(GMP_model_PA, set_K_a))
+
+
+        .def("set_L_a", &GMP_model_PA::set_L_a, py::arg("v"), D(GMP_model_PA, set_L_a))
+
+
+        .def("set_K_b", &GMP_model_PA::set_K_b, py::arg("v"), D(GMP_model_PA, set_K_b))
+
+
+        .def("set_M_b", &GMP_model_PA::set_M_b, py::arg("v"), D(GMP_model_PA, set_M_b))
+
+
+        .def("set_L_b", &GMP_model_PA::set_L_b, py::arg("v"), D(GMP_model_PA, set_L_b))
+
+
+        .def("set_mode",
+             &GMP_model_PA::set_mode,
+             py::arg("mode"),
+             D(GMP_model_PA, set_mode))
 
         ;
 }

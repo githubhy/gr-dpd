@@ -74,6 +74,12 @@ public:
                      std::string mode,
                      const std::vector<gr_complex>& coeff1,
                      const std::vector<gr_complex>& coeff2);
+    virtual void set_K_a(const int v) = 0;
+    virtual void set_L_a(const int v) = 0;
+    virtual void set_K_b(const int v) = 0;
+    virtual void set_M_b(const int v) = 0;
+    virtual void set_L_b(const int v) = 0;
+    virtual void set_mode(const std::string mode) = 0;
 };
 
 } // namespace dpd

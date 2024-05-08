@@ -5,7 +5,13 @@ category: '[dpd]'
 templates:
   imports: from gnuradio import dpd
   make: dpd.GMP_model_PA(${model_param1}, ${model_param2}, ${model_param3}, ${model_param4}, ${model_param5}, ${mode}, ${coeff1}, ${coeff2})
-
+  callbacks:
+  - set_K_a(${model_param1})
+  - set_L_a(${model_param2})
+  - set_K_b(${model_param3})
+  - set_M_b(${model_param4})
+  - set_L_b(${model_param5})
+  - set_mode(${mode})
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
 #     * id (makes the value accessible as keyname, e.g. in the make entry)

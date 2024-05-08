@@ -18,4 +18,28 @@
 static const char* __doc_gr_dpd_GMP_model_PA = R"doc()doc";
 
 
+static const char* __doc_gr_dpd_GMP_model_PA_GMP_model_PA_0 = R"doc()doc";
+
+
+static const char* __doc_gr_dpd_GMP_model_PA_GMP_model_PA_1 = R"doc()doc";
+
+
 static const char* __doc_gr_dpd_GMP_model_PA_make = R"doc()doc";
+
+
+static const char* __doc_gr_dpd_GMP_model_PA_set_K_a = R"doc()doc";
+
+
+static const char* __doc_gr_dpd_GMP_model_PA_set_L_a = R"doc()doc";
+
+
+static const char* __doc_gr_dpd_GMP_model_PA_set_K_b = R"doc()doc";
+
+
+static const char* __doc_gr_dpd_GMP_model_PA_set_M_b = R"doc()doc";
+
+
+static const char* __doc_gr_dpd_GMP_model_PA_set_L_b = R"doc()doc";
+
+
+static const char* __doc_gr_dpd_GMP_model_PA_set_mode = R"doc()doc";

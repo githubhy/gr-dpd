@@ -58,6 +58,12 @@ public:
                         int M_b,
                         int L_b,
                         cx_fcolvec& GMP_vector);
+    void set_K_a(const int v) override { K_a = v; }
+    void set_L_a(const int v) override { L_a = v; }
+    void set_K_b(const int v) override { K_b = v; }
+    void set_M_b(const int v) override { M_b = v; }
+    void set_L_b(const int v) override { L_b = v; }
+    void set_mode(const std::string m) override { Mode_vl = m; }
 };
 
 } // namespace dpd
