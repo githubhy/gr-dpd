@@ -26,11 +26,17 @@ private:
     int K_b;             // Order II
     int M_b;             // Cross-Terms Index
     int L_b;             // Memory Depth II
-    int M;               // No. of Coefficients
     std::string Mode_vl; // Mode of Operation
     cx_fmat coeff_1;     // Coefficient Vector for signal-and-aligned envelope
     cx_fcube coeff_2;    // Coefficient Vector for signal-and-lagging envelope
 
+    const std::vector<gr_complex> coeff1; // save the original coeffs
+    const std::vector<gr_complex> coeff2; // save the original coeffs
+
+    bool param_updated = false; // Indicate if the incoming params are updated or not
+    void reset();       // Reset the internal params
+
+    std::mutex param_update_mutex;
 public:
     GMP_model_PA_impl(int model_param1,
                       int model_param2,
@@ -47,8 +53,7 @@ public:
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items);
     // Copies Coefficient vectors into local variable vectors
-    void initialise_Coefficients(const std::vector<gr_complex>& coeff1,
-                                 const std::vector<gr_complex>& coeff2);
+    void initialise_Coefficients();
     // Generates of shift-structured GMP vector
     void gen_GMP_vector(const gr_complex* const in,
                         int item,
@@ -58,12 +63,32 @@ public:
                         int M_b,
                         int L_b,
                         cx_fcolvec& GMP_vector);
-    void set_K_a(const int v) override { K_a = v; }
-    void set_L_a(const int v) override { L_a = v; }
-    void set_K_b(const int v) override { K_b = v; }
-    void set_M_b(const int v) override { M_b = v; }
-    void set_L_b(const int v) override { L_b = v; }
-    void set_mode(const std::string m) override { Mode_vl = m; }
+    void set_K_a(const int v) override {
+        std::unique_lock<std::mutex> lock(param_update_mutex);
+        param_updated = true;
+        K_a = v;
+    }
+    void set_L_a(const int v) override {
+        std::unique_lock<std::mutex> lock(param_update_mutex);
+        param_updated = true;
+        L_a = v;
+    }
+    void set_K_b(const int v) override {
+        std::unique_lock<std::mutex> lock(param_update_mutex);
+        param_updated = true; K_b = v;
+    }
+    void set_M_b(const int v) override {
+        std::unique_lock<std::mutex> lock(param_update_mutex);
+        param_updated = true; M_b = v;
+    }
+    void set_L_b(const int v) override {
+        std::unique_lock<std::mutex> lock(param_update_mutex);
+        param_updated = true; L_b = v;
+    }
+    void set_mode(const std::string m) override {
+        std::unique_lock<std::mutex> lock(param_update_mutex);
+        param_updated = true; Mode_vl = m;
+    }
 };
 
 } // namespace dpd

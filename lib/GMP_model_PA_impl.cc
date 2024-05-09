@@ -94,13 +94,11 @@ GMP_model_PA_impl::GMP_model_PA_impl(int model_param1,
       K_b(model_param3),
       M_b(model_param4),
       L_b(model_param5),
-      M(model_param1 * model_param2 + model_param3 * model_param4 * model_param5),
-      Mode_vl(mode)
+      Mode_vl(mode),
+      coeff1(coeff1),
+      coeff2(coeff2)
 {
-    set_history(std::max(L_a, M_b + L_b));
-    coeff_1 = cx_fmat(K_a, L_a, fill::zeros);
-    coeff_2 = cx_fcube(K_b, M_b, L_b, fill::zeros);
-    initialise_Coefficients(coeff1, coeff2);
+    reset();
 }
 
 /*
@@ -108,9 +106,16 @@ GMP_model_PA_impl::GMP_model_PA_impl(int model_param1,
  */
 GMP_model_PA_impl::~GMP_model_PA_impl() {}
 
-void GMP_model_PA_impl::initialise_Coefficients(const std::vector<gr_complex>& coeff1,
-                                                const std::vector<gr_complex>& coeff2)
+void GMP_model_PA_impl::reset() {
+    set_history(std::max(L_a, M_b + L_b));
+    initialise_Coefficients();
+}
+
+void GMP_model_PA_impl::initialise_Coefficients()
 {
+    coeff_1 = cx_fmat(K_a, L_a, fill::zeros);
+    coeff_2 = cx_fcube(K_b, M_b, L_b, fill::zeros);
+
     int inx = 0;
 
     // Initialise coefficients of signal-and-aligned envelope
@@ -203,6 +208,13 @@ int GMP_model_PA_impl::work(int noutput_items,
 {
     auto in = static_cast<const input_type*>(input_items[0]);
     auto out = static_cast<output_type*>(output_items[0]);
+
+    std::unique_lock<std::mutex> lock(param_update_mutex);
+
+    if (param_updated) {
+        param_updated = false;
+        reset();
+    }
 
     // Do <+signal processing+>
     for (int item = history() - 1; item < noutput_items + history() - 1; item++) {

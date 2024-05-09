@@ -1,6 +1,7 @@
 options:
   parameters:
     author: Alekh Gupta
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -32,6 +33,111 @@ options:
     state: enabled
 
 blocks:
+- name: K_a
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: '[5,0,1,1]'
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: int
+    start: '1'
+    step: '1'
+    stop: '10'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 20.0]
+    rotation: 0
+    state: enabled
+- name: K_b
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: '[5,1,1,1]'
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: int
+    start: '1'
+    step: '1'
+    stop: '5'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [896, 20.0]
+    rotation: 0
+    state: enabled
+- name: L_a
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: '[6,0,1,1]'
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: int
+    start: '1'
+    step: '1'
+    stop: '10'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 20.0]
+    rotation: 0
+    state: enabled
+- name: L_b
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: '[7,1,1,1]'
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: int
+    start: '1'
+    step: '1'
+    stop: '5'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1016, 20.0]
+    rotation: 0
+    state: enabled
+- name: M_b
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: '[6,1,1,1]'
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: int
+    start: '1'
+    step: '1'
+    stop: '5'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1128, 20.0]
+    rotation: 0
+    state: enabled
 - name: samp_rate
   id: variable
   parameters:
@@ -51,7 +157,7 @@ blocks:
     gui_hint: '[0,0,1,1]'
     label: Tone_Spacing/Freq.
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: int
     start: '0'
     step: '1000'
@@ -72,7 +178,7 @@ blocks:
     gui_hint: '[0,1,1,1]'
     label: Amplitude
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'
@@ -119,6 +225,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -141,6 +248,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -168,13 +276,15 @@ blocks:
     coordinate: [324, 292]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -184,30 +294,38 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [468, 320]
+    coordinate: [464, 308.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: dpd_GMP_model_PA_0
   id: dpd_GMP_model_PA
   parameters:
     affinity: ''
     alias: ''
-    coeff1: (10)
-    coeff2: (1)
+    coeff1: (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+    coeff2: (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    mode: Odd
-    model_param1: '1'
-    model_param2: '1'
-    model_param3: '1'
-    model_param4: '1'
-    model_param5: '1'
+    mode: Both
+    model_param1: K_a
+    model_param2: L_a
+    model_param3: K_b
+    model_param4: M_b
+    model_param5: L_b
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [731, 368]
+    coordinate: [760, 388.0]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_0
@@ -244,7 +362,7 @@ blocks:
     fc: '0'
     fftsize: '2048'
     freqhalf: 'True'
-    grid: 'False'
+    grid: 'True'
     gui_hint: '[1,1,4,1]'
     label: Relative Gain
     label1: ''
@@ -262,6 +380,7 @@ blocks:
     minoutbuf: '0'
     name: '"Output Signal"'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'False'
     tr_chan: '0'
     tr_level: '0.0'
@@ -280,14 +399,14 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
     ymax: '10'
     ymin: '-140'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1056, 375]
+    coordinate: [1048, 404.0]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_1
@@ -342,6 +461,7 @@ blocks:
     minoutbuf: '0'
     name: '"Input Signal"'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'False'
     tr_chan: '0'
     tr_level: '0.0'
@@ -360,14 +480,14 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
     ymax: '10'
     ymin: '-140'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [938, 182]
+    coordinate: [1048, 260.0]
     rotation: 0
     state: true
 
@@ -375,10 +495,11 @@ connections:
 - [analog_fastnoise_source_x_0, '0', blocks_add_xx_0, '2']
 - [analog_sig_source_x_0, '0', blocks_add_xx_0, '0']
 - [analog_sig_source_x_1, '0', blocks_add_xx_0, '1']
-- [blocks_add_xx_0, '0', blocks_throttle_0, '0']
-- [blocks_throttle_0, '0', dpd_GMP_model_PA_0, '0']
-- [blocks_throttle_0, '0', qtgui_freq_sink_x_1, '0']
+- [blocks_add_xx_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', dpd_GMP_model_PA_0, '0']
+- [blocks_throttle2_0, '0', qtgui_freq_sink_x_1, '0']
 - [dpd_GMP_model_PA_0, '0', qtgui_freq_sink_x_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0
