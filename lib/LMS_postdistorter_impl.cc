@@ -86,7 +86,7 @@ cx_mat LMS_postdistorter_impl::ls_estimation(cx_mat A, gr_complexd y)
     cx_mat num = A * (A.t());
     num = num + lambda * eye<cx_mat>(size(A * (A.t())));
     cx_mat ls_result =
-        solve((A * (A.t()) + lambda * eye<cx_mat>(size(A * (A.t())))), A * yy);
+        solve(A * A.t() + lambda * eye<cx_mat>(size(A * A.t())), A * yy);
     // cx_mat ls_result(size(w_iMinus1), fill::zeros);
     return ls_result;
 }
@@ -196,7 +196,7 @@ int LMS_postdistorter_impl::work(int noutput_items,
         l_rate_1_minus(0, 0) = gr_complexd(1.0, 0.0) - learning_rate;
         
         if (str == "newton") {
-            error = pa_input - as_scalar(pa_output_t * w_iMinus1);
+            auto error = pa_input - as_scalar(pa_output_t * w_iMinus1);
             cx_mat ls_result = ls_estimation(pa_output, error);
             w_iMinus1 = w_iMinus1 + (ls_result * l_rate);
         }

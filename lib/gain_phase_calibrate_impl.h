@@ -16,10 +16,9 @@ namespace dpd {
 class gain_phase_calibrate_impl : public gain_phase_calibrate
 {
 private:
-    gr_complex cfactor, previous_cfactor, current_cfactor;
+    gr_complex previous_cfactor;
     int _ninput_items, item;
     bool d_reference_acquired, reference_acquired;
-    gr_complex d_sample, sample;
 
 public:
     gain_phase_calibrate_impl();

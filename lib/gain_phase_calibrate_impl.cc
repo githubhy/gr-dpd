@@ -31,7 +31,6 @@ gain_phase_calibrate_impl::gain_phase_calibrate_impl()
 {
     previous_cfactor = gr_complex(0.0, 0.0);
     d_reference_acquired = false;
-    d_sample = gr_complex(0.0, 0.0);
 }
 
 /*
@@ -63,9 +62,9 @@ int gain_phase_calibrate_impl::general_work(int noutput_items,
                                             gr_vector_const_void_star& input_items,
                                             gr_vector_void_star& output_items)
 {
-    auto in1 = static_cast<const input_type*>(input_items[0]); // PA_output
-    auto in2 = static_cast<const input_type*>(input_items[1]); // Input Sample
-    auto in3 = static_cast<const input_type*>(input_items[2]); // PA_DPD
+    auto in1 = static_cast<const input_type*>(input_items[0]); // PA_output (PA output w/o any processing)
+    auto in2 = static_cast<const input_type*>(input_items[1]); // Input Sample (PA input if no DPD, predistorter input if there is DPD)
+    auto in3 = static_cast<const input_type*>(input_items[2]); // PA_DPD (PA output with the DPD algorithm)
     auto out = static_cast<output_type*>(output_items[0]);
 
     // Do <+signal processing+>
@@ -74,16 +73,16 @@ int gain_phase_calibrate_impl::general_work(int noutput_items,
     gr_complex cfactor_avg_sum = gr_complex(0.0, 0.0);
     while (item < _ninput_items) {
 
-        sample = in2[item];
-        current_cfactor = sample / in1[item]; // Inverse of PA gain
+        gr_complex cfactor = gr_complex(0.0, 0.0);
+        auto instant_cfactor = in2[item] / in1[item]; // Inverse of PA gain
 
         if (previous_cfactor != gr_complex(0.0, 0.0)) {
-            cfactor_avg_sum = cfactor_avg_sum + current_cfactor;
+            cfactor_avg_sum = cfactor_avg_sum + instant_cfactor;
             cfactor = cfactor_avg_sum / gr_complex(item + 1.0);
         } else
-            cfactor = current_cfactor;
+            cfactor = instant_cfactor;
 
-        // cfactor = gr_complex(0.5, 0.0) * (previous_cfactor + current_cfactor);
+        // cfactor = gr_complex(0.5, 0.0) * (previous_cfactor + instant_cfactor);
 
         if (!almost_equals_zero(std::real(in1[item]), 5) &&
             !almost_equals_zero(std::imag(in1[item]), 5))

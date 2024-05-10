@@ -17,7 +17,6 @@ namespace dpd {
 class predistorter_training_impl : public predistorter_training
 {
 private:
-    // Nothing to declare in this block.
     const int K_a;
     const int L_a;
     const int K_b;
@@ -26,7 +25,7 @@ private:
     const int d_M;
     std::string d_mode;
     bool d_update_predistorter_training, update_predistorter_training;
-    arma::cx_colvec d_predistorter_training_colvec, predistorter_training_colvec;
+    arma::cx_colvec trained_coeffs_colvec;
 
 public:
     predistorter_training_impl(const std::vector<int>& dpd_params,
@@ -34,7 +33,7 @@ public:
                                const std::vector<gr_complex>& taps);
     ~predistorter_training_impl();
     // Copies 'taps' from message PMT to local colvec variable
-    void get_taps(pmt::pmt_t P);
+    void set_taps(pmt::pmt_t P);
     // Generates shift-structured GMP vector based on parameters
     void gen_GMPvector(const gr_complex* const in,
                        int item,

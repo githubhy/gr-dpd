@@ -29,7 +29,7 @@ private:
     const int sreg_len = 50;
     gr_complexd sreg[50];
     const gr_complexd* ptr_sreg = sreg;
-    gr_complexd pa_input, error, learning_rate;
+    gr_complexd pa_input, learning_rate;
 
     std::vector<gr_complexd> taps;
 

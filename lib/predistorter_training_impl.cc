@@ -51,9 +51,9 @@ predistorter_training_impl::predistorter_training_impl(
       d_mode(mode)
 {
     d_update_predistorter_training = true;
-    d_predistorter_training_colvec.set_size(d_M);
-    d_predistorter_training_colvec.zeros();
-    d_predistorter_training_colvec(0) = gr_complex(1.0, 0.0);
+    trained_coeffs_colvec.set_size(d_M);
+    trained_coeffs_colvec.zeros();
+    trained_coeffs_colvec(0) = gr_complex(1.0, 0.0);
     set_history(std::max(L_a, M_b + L_b));
     // setup output message port for
     // sending predistorted PA input to the postdistorter
@@ -62,12 +62,12 @@ predistorter_training_impl::predistorter_training_impl(
 
     if (mode == "static")
         for (int i = 0; i < taps.size(); i++) {
-            d_predistorter_training_colvec(i) = taps[i];
+            trained_coeffs_colvec(i) = taps[i];
         }
     // setup input message port
     message_port_register_in(pmt::mp("taps"));
     set_msg_handler(pmt::mp("taps"),
-                    std::bind(&predistorter_training_impl::get_taps, this, std::placeholders::_1));
+                    std::bind(&predistorter_training_impl::set_taps, this, std::placeholders::_1));
 }
 
 /*
@@ -75,13 +75,13 @@ predistorter_training_impl::predistorter_training_impl(
  */
 predistorter_training_impl::~predistorter_training_impl() {}
 
-void predistorter_training_impl::get_taps(pmt::pmt_t P)
+void predistorter_training_impl::set_taps(pmt::pmt_t P)
 {
     d_update_predistorter_training = true;
 
     // extract predistorter_training weight vector from the message
     for (int i = 0; i < pmt::length(P); i++)
-        d_predistorter_training_colvec(i) = pmt::c64vector_ref(P, i);
+        trained_coeffs_colvec(i) = pmt::c64vector_ref(P, i);
 }
 void predistorter_training_impl::gen_GMPvector(const gr_complex* const in,
                                                int item,
@@ -153,26 +153,21 @@ int predistorter_training_impl::work(int noutput_items,
                                      gr_vector_const_void_star& input_items,
                                      gr_vector_void_star& output_items)
 {
-    // auto in = static_cast<const input_type*>(input_items[0]);
+    auto in = static_cast<const input_type*>(input_items[0]);
     auto out = static_cast<output_type*>(output_items[0]);
     auto flag = static_cast<output_type*>(output_items[1]);
-
-    predistorter_training_colvec = d_predistorter_training_colvec;
     
     // Do <+signal processing+>
     for (int item = history() - 1; item < noutput_items + history() - 1; item++) {
-        
-        update_predistorter_training = d_update_predistorter_training;
         // get PA input which has been arranged in a GMP vector format
         // for predistortion
         cx_fcolvec GMP_vector(d_M);
-        gen_GMPvector(
-            (const gr_complex*)input_items[0], item, K_a, L_a, K_b, M_b, L_b, GMP_vector);
+        gen_GMPvector(in, item, K_a, L_a, K_b, M_b, L_b, GMP_vector);
         cx_fmat yy_cx_rowvec = GMP_vector.st();
 
         // apply predistortion and send the PA input to postdistorter
         out[item - history() + 1] = as_scalar(
-            conv_to<cx_fmat>::from(yy_cx_rowvec * predistorter_training_colvec));
+            conv_to<cx_fmat>::from(yy_cx_rowvec * trained_coeffs_colvec));
 
         // Flag output only if mode of operation is 'static' 
         if(d_mode == "static")
@@ -182,10 +177,8 @@ int predistorter_training_impl::work(int noutput_items,
 
         // Setting flag output according to whether 'taps' are recieved 
         // or not
-        if(update_predistorter_training || item == history() - 1)
-        {
+        if(d_update_predistorter_training || item == history() - 1)
             flag[item - history() + 1] = gr_complex(1.0, 0.0);
-        }
         else
             flag[item - history() + 1] = gr_complex(0.0, 0.0);
         d_update_predistorter_training = false;

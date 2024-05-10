@@ -315,7 +315,7 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    mode: Both
+    mode: Odd
     model_param1: K_a
     model_param2: L_a
     model_param3: K_b
